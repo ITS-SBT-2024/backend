@@ -1,4 +1,5 @@
-console.log ("Hello");
-a=1;
+console.log("Hello");
+a = 1;
+b = 2;
 
-console.log ("a=" + a);
+console.log("a + b = " + (a + b));
