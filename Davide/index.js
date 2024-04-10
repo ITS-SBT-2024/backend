@@ -11,8 +11,8 @@ app.get('/', miaFunzione)
 
 app.post('/post', miaFunzione)
 
-app.get('/a', function (req, res) {
-  res.send('Hello a')
+app.get('/aaa', function (req, res) {
+  res.send('Hello AAA')
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
