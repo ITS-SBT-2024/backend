@@ -1,4 +1,4 @@
-console.log ("Hello");
-a=1;
+console.log("ciao");
+a = 1;
 
-console.log ("a=" + a);
+console.log("a=" + a);
