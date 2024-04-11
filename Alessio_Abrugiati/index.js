@@ -9,6 +9,12 @@ app.get("/", (req, res) => {
 })
 
 app.get("/alessio", (req, res) => {
+    const user = req.query.user
+    if (user) {
+        res.send("Eccoti qui")
+    } else {
+        res.send("Non riconosciuto")
+    }
     res.send("Ciao")
 })
 
