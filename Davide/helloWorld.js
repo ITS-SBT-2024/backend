@@ -38,9 +38,11 @@ app.get('/books/:id', findBook)
     }
   });
   if (found) {
+    res.statusCode = 200;
     res.send('Trovato libro: ' + found)
   } else {
     console.log('NOT FOUND')
+    res.statusCode = 404;
     res.send('Book not found');
   }
 }
