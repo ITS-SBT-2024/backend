@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 
 const myFunc = (req, res) => {
-  res.send('Hello davide');
+  res.send('<h1 style="color: red">Hello davide</h1>');
 }
 
 app.get('/davide', myFunc);
