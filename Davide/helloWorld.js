@@ -28,7 +28,7 @@ books = [{
 
 app.get('/books/:id', findBook)
 
- function findBook(req, res) {
+function findBook(req, res) {
   const id = req.params.id
   let found = '';
   books.forEach(book => {
