@@ -2,6 +2,18 @@ const express = require("express");
 const app = express();
 const port= 3000;
 
+const nocache = require('nocache');
+
+app.use(nocache());
+
+app.use(express.urlencoded({ extended: true }));
+
+function logger (req, res, next){
+   console.log("Chiamato "+req.url+"!!!!");
+   next();
+}
+
+app.use (logger);
 const userDB=[
     {
         username:"maurizio",
@@ -58,8 +70,9 @@ app.get('/books/:id', function(req,res) {
 
 
 app.post('/login', function(req,res) {
-    const user=req.query.user;
-    const pass=req.query.password;
+    const user=req.body.user;
+    const pass=req.body.password;
+    console.log("user="+user + "pass="+pass);
     trovato=null;
     userDB.forEach (u => {
         if (u.username == user && u.password==pass) {
@@ -76,6 +89,25 @@ app.post('/login', function(req,res) {
         res.send("Utente non valido");
     }
 });
+
+app.get('/login', function(req,res) {
+        res.statusCode=200;
+        //View
+        res.send(`
+        <html><head>Login alla mia app</head>
+        <body>
+        <h1>Benvenuto nella App!!!</h1>
+        <p>Login:</p>
+        <form method="POST" action="/login">
+            <input name="user" type="text"/>
+            <input name="password" type="password"/>
+            <input type="submit"/>
+            
+        </form></body></html>
+        `);
+});
+
+
 
 app.get('/', miafunzione);
 app.get('/aaa', function (req, res) {
