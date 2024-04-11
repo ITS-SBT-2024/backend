@@ -14,4 +14,4 @@ app.get('/aaa', function (req, res) {
     res.send('Hello AAA')
 });
 
-app.listen (port,() => {console.log ("Backend partito!")});
+app.listen(port, () => { console.log("Hai salutato") });
