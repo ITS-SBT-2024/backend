@@ -34,6 +34,20 @@ app.get("/login", function(req,res){
     const user = req.query.user;
     const password = req.query.password;
     trovato = null
-
+    userDB.forEach (u => {
+        if (u.username == user && u.password==pass) {
+            trovato=u;
+        } 
+    });
+    if (trovato ){
+        res.statusCode=200;
+        //View
+        res.send("Benvenuto "+trovato.nome);
+    } else {
+        res.statusCode=401;
+        //View
+        res.send("Utente non valido");
     }
-)
+});
+
+    
