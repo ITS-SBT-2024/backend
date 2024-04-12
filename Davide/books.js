@@ -24,8 +24,7 @@ let numOfBooks = BookDB.length + 1;
 app.post('/books', addBook);
 
 function addBook(req, res) {
-  const title = req.body.title;
-  const author = req.body.author;
+  const { title, author } = req.body;
   const id = `${numOfBooks}`;
 
   BookDB.push({
@@ -42,7 +41,7 @@ function addBook(req, res) {
 app.get('/books/:id', getBookById);
 
 function getBookById(req, res) {
-  const id = req.params.id;
+  const { id } = req.params;
 
   const bookFound = BookDB.find(book => id === book.id);
 
