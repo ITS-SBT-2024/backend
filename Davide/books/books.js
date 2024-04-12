@@ -1,3 +1,5 @@
+// ! Current issues: Per come sono ora gestite PUT e POST è possibile avdere libri diversi con stesso ID...
+
 const express = require('express');
 const nocache = require('nocache');
 const app = express();
@@ -5,8 +7,7 @@ const port = 3000;
 
 app.use(nocache());
 app.use(express.urlencoded({ extended: true }));
-// * Per prossimo esercizio:
-// * app.use(express.json());
+app.use(express.json());
 
 let BookDB = [
   {
@@ -27,18 +28,22 @@ app.post('/books', addBook);
 
 function addBook(req, res) {
   const { title, author } = req.body;
-  const id = `${numOfBooks}`;
+  const id = req.params.id || `${numOfBooks}`;
+  const bookFound = BookDB.find(book => book.title === title && book.author === author);
 
-  BookDB.push({
-    id,
-    title,
-    author
-  })
-
-  res.statusCode = 201;
-  console.log('Book added');
-  res.send(`You added ${title} by ${author} - ID: ${id}`)
-};
+  if (!bookFound) {
+    BookDB.push({
+      id,
+      title,
+      author
+    });
+    numOfBooks++;
+    res.statusCode = 201;
+    res.send(`You added ${title} by ${author} - ID: ${id}`);
+  } else {
+    res.status(200).send('Book already in DB');
+  }
+}
 
 app.get('/books/:id', getBookById);
 
@@ -49,12 +54,10 @@ function getBookById(req, res) {
 
   if (bookFound) {
     res.statusCode = 200;
-    console.log('book found');
-    res.send(`${bookFound.title} by ${bookFound.author}`)
+    res.send(`${bookFound.title} by ${bookFound.author} at ID ${id}`);
   } else {
     res.statusCode = 401;
-    console.log('not found');
-    res.send('Book not found')
+    res.send('Book not found');
   }
 }
 
@@ -62,26 +65,39 @@ app.get('/books', getBooksDB);
 
 function getBooksDB(req, res) {
   res.statusCode = 200;
-  const titleList = BookDB.map(book => book.title);
-  res.send(titleList)
+  // const titleList = BookDB.map(book => book.title);
+  // res.send(titleList);
+  res.send(BookDB)
 }
 
 app.delete('/books/:id', deleteBookById);
 
 function deleteBookById(req, res) {
   const { id } = req.params;
-  let found = false;
+  const bookFound = BookDB.find(book => id === book.id);
 
-  BookDB.forEach(book => {
-    if (id === book.id) {
-      found = true;
-      BookDB = BookDB.filter(book => book.id !== id);
-      console.log('book deleted');
-      res.send('Book has been deleted');
-    }
-  })
-  if (!found) {
+  if (bookFound) {
+    BookDB = BookDB.filter(book => book.id !== id);
+    res.send('Book has been deleted');
+  } else {
     res.send('Book not found');
+  }
+}
+
+app.put('/books/:id', substituteBookById);
+
+function substituteBookById(req, res) {
+  const { id } = req.params;
+  const { title, author } = req.body
+
+  const bookFound = BookDB.find(book => id === book.id);
+
+  if (bookFound) {
+    bookFound.title = title;
+    bookFound.author = author;
+    res.status(200).send('Book has been substituted');
+  } else {
+    addBook(req, res);
   }
 }
 
