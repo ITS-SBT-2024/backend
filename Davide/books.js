@@ -70,14 +70,14 @@ function deleteBookById(req, res) {
   const { id } = req.params;
   let found = false;
 
-  for (book of BookDB) {
+  BookDB.forEach(book => {
     if (id === book.id) {
       found = true;
       BookDB = BookDB.filter(book => book.id !== id);
       console.log('book deleted');
       res.send('Book has been deleted');
     }
-  }
+  })
   if (!found) {
     res.send('Book not found');
   }
