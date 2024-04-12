@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
+
+app.use(express.urlencoded({ extended: true }));
+
 books = [
 	{
 		id: 0,
@@ -49,6 +52,27 @@ app.get("/books/:id", function(req, res) {
 	} else {
 		res.send(book.titolo);
 	}
+});
+
+app.get("/allbooks", function(req, res) {
+	// let stringa = "";
+	// for (let i = 0; i < books.length; i++)  {
+	// 	stringa += books[i].titolo + "\n";
+	// }
+	// res.send(stringa);
+
+	res.send(books);
+});
+
+app.post("/addbook", function(req, res) {
+	const titolo = req.body.titolo;
+	nuovoLibro = {
+		id: books.length,
+		titolo: titolo
+	}
+	books.push(nuovoLibro);
+	console.log(books);
+	res.send("Libro aggiunto: " + nuovoLibro);
 });
 
 app.listen(port, () => {console.log("Backend partito!")});
