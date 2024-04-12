@@ -1,3 +1,9 @@
 1. PUT di un libro - "Sostituisce l'elemente indirizzato con quello nel body"
 2. POST su un libro - "AGGIORNI UN LIBRO CHE C'è GIà"
 3. su GET dei libri implementa un search (con querystring: ?search="Signore")
+4. BookDB su file separato
+
+
+
+
+tel. 3518331101
