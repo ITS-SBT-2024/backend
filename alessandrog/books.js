@@ -36,10 +36,10 @@ books = [
 	},
 ];
 
-app.get("/books/:id", function(req, res) {
-	let id = parseInt(req.params.id);
+app.get("/viewbook/:id", function(req, res) {
+	const id = parseInt(req.params.id);
 	
-	let book = "";
+	const book = "";
 	for (let i = 0; i < books.length; i++) {
 		if (books[i].id === id) {
 			book = books[i];
@@ -64,15 +64,17 @@ app.get("/allbooks", function(req, res) {
 	res.send(books);
 });
 
-app.post("/addbook", function(req, res) {
-	const titolo = req.body.titolo;
-	nuovoLibro = {
-		id: books.length,
-		titolo: titolo
+app.delete("/delbook/:id", function(req, res) {
+	const id = parseInt(req.params.id);
+	
+	for (let i = 0; i < books.length; i++) {
+		if (id === books[i].id) {
+			books.splice(i, 1);
+			res.send("Book has been deleted.");
+			break;
+		}
 	}
-	books.push(nuovoLibro);
 	console.log(books);
-	res.send("Libro aggiunto: " + nuovoLibro);
 });
 
 app.listen(port, () => {console.log("Backend partito!")});
