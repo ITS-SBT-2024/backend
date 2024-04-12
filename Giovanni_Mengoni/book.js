@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
-const port= 3000;
+const port= 80;
+
 
 const BookDB=[
     {
@@ -15,3 +16,27 @@ const BookDB=[
     },
 
 ];
+app.get("/", function(req,res){
+    res.send("Benvenuto nel local host");
+});
+
+
+app.get("/books/:id", function(req,res){
+    const id= req.params.id;
+
+    trovato = null
+    BookDB.forEach ( u =>{
+        if (u.id === id) {
+            trovato = u
+        }
+    });
+    if (trovato){
+        res.statusCode=200;
+        res.send("Trovato libro Titolo: "+trovato.title + " Autore:" + trovato.author);
+    } else {
+        res.statusCode=404;
+        res.send("libro non trovato nella nostra libreria...")
+    }
+
+})
+app.listen (port,() => {console.log ("Backend partito!")});
