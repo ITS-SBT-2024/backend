@@ -6,7 +6,7 @@ const port = 3000;
 app.use(nocache());
 app.use(express.urlencoded({ extended: true }));
 
-const BookDB = [
+let BookDB = [
   {
     id: "1",
     title: "The Lord of the Rings",
@@ -63,6 +63,25 @@ function getBooksDB(req, res) {
   res.statusCode = 200;
   const titleList = BookDB.map(book => book.title);
   res.send(titleList)
+}
+
+app.delete('/books/:id', deleteBookById);
+
+function deleteBookById(req, res) {
+  const { id } = req.params;
+  let found = false;
+
+  for (book of BookDB) {
+    if (id === book.id) {
+      found = true;
+      BookDB = BookDB.filter(book => book.id !== id);
+      console.log('book deleted');
+      res.send('Book has been deleted');
+    }
+  }
+  if (!found) {
+    res.send('Book not found');
+  }
 }
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
