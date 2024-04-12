@@ -50,4 +50,15 @@ app.get('/aaa', function (req, res) {
     res.send('Hello from AAA')
 });
 
+
+app.post('/add-book', function(req, res) {
+    const bookName = req.body.name;
+    const bookImage = req.body.image;
+
+    // In questo punto, salva l'immagine nel tuo sistema di file e memorizza il percorso nel database o genera un'immagine di placeholder
+    // Ritorna l'URL dell'immagine salvata o un'indicazione di successo
+
+    res.json({ success: true, image: 'path_to_image.jpg' });
+});
+
 app.listen (port,() => {console.log ("Backend partito!")});
