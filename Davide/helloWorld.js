@@ -34,14 +34,14 @@ function findBook(req, res) {
   books.forEach(book => {
     if (book.id === id) {
       found = book.nome;
-      console.log('Found')
+      // console.log('Found')
     }
   });
   if (found) {
     res.statusCode = 200;
     res.send('Trovato libro: ' + found)
   } else {
-    console.log('NOT FOUND')
+    // console.log('NOT FOUND')
     res.statusCode = 404;
     res.send('Book not found');
   }
