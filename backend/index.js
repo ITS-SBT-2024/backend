@@ -1,11 +1,17 @@
 const express = require("express");
-const app = express()
-const port = 3000
 
-app.get("/", function (req, res) {
-    res.send("Home")
-})
-app.get("/alessandro", function (req, res) {
-    res.send("<h1>Questo è l'h2 della page Alessandro<h1>")
-})
-app.listen(port, () => { console.log("Sei qui") })
+const app = express();
+
+const port = 3000;
+
+function miafunzione(a, b) {
+    b.send("Hello World from function");
+}
+
+app.get('/', miafunzione);
+app.post('/post', miafunzione);
+app.get('/aaa', function (req, res) {
+    res.send('Hello AAA')
+});
+
+app.listen(port, () => { console.log("Hai salutato") });
