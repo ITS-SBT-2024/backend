@@ -59,7 +59,7 @@ function addBook(req, res) {
     const title = req.body.title;
     const author = req.body.author;
 }
-addBook.forEach(book => {
+BookDB.forEach(book => {
     BookDB.push({
         id: id,
         title: title,
