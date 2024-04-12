@@ -51,6 +51,10 @@ app.get("/books/:id", function (req, res) {
     }
 });
 
+app.get("/books", function (req, res) {
+    res.json(books);
+});
+
 app.post("/books", function (req, res) {
     const title = req.body.title;
     const author = req.body.author;
@@ -63,5 +67,22 @@ app.post("/books", function (req, res) {
     books.push(newBook);
     res.send("Libro aggiunto alla lista con l'id: " + books[books.length - 1].id);
 });
+
+app.delete("/books/:id", function (req, res) {
+    let Id = parseInt(req.params.id)
+    let cancellato = false
+    for (let i = 0; i < books.length; i++) {
+        if (books[i].id === Id) {
+            cancellato = true
+            books.splice(i, 1)
+            break;
+        }
+    }
+    if (cancellato) {
+        res.send("Libro cancellato")
+    } else {
+        res.send("Libro non trovato")
+    }
+})
 
 app.listen(port, () => { console.log("Server avviato!") });
