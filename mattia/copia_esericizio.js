@@ -61,9 +61,9 @@ function addBook(req, res) {
 }
 BookDB.forEach(book => {
     BookDB.push({
-        id: id,
-        title: title,
-        author: author
+        id: book.id,
+        title: book.title,
+        author: book.author
     });
 });
 
