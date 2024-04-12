@@ -39,4 +39,22 @@ app.get("/books/:id", (req, res) => {
     }
 })
 
-app.listen (port,() => {console.log ("Backend partito!")});
+app.post("/books", function (req, res) {
+    const title = req.body.title;
+    const author = req.body.author;
+    let newBook =
+    {
+        title: title,
+        author: author,
+        id: books.length + 1
+    };
+    books.push(newBook);
+    res.send("Libro aggiunto alla lista con l'id: " + books[books.length - 1].id);
+});
+
+// Ottieni tutti i libri
+app.get("/books", (req, res) => {
+    res.json(books);
+});
+
+app.listen(port, () => { console.log("Backend partito!") });
