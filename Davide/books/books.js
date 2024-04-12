@@ -5,6 +5,8 @@ const port = 3000;
 
 app.use(nocache());
 app.use(express.urlencoded({ extended: true }));
+// * Per prossimo esercizio:
+// * app.use(express.json());
 
 let BookDB = [
   {
