@@ -13,24 +13,6 @@ function logger(req, res, next) {
     next();
 }
 
-app.use(logger);
-const userDB = [
-    {
-        username: "maurizio",
-        password: "123",
-        nome: "Maurizio D'Ottavi"
-    },
-    {
-        username: "gigi",
-        password: "345",
-        nome: "Pierluigi Alessandrini"
-    },
-    {
-        username: "bill",
-        password: "678",
-        nome: "William Shakespeare"
-    },
-];
 const BookDB = [
     {
         id: "1",
@@ -68,44 +50,23 @@ app.get('/books/:id', function (req, res) {
     }
 });
 
+app.post('/books', addBook);
 
-app.post('/login', function (req, res) {
-    const user = req.body.user;
-    const pass = req.body.password;
-    console.log("user=" + user + "pass=" + pass);
-    trovato = null;
-    userDB.forEach(u => {
-        if (u.username == user && u.password == pass) {
-            trovato = u;
-        }
+let libriTotali = 0;
+
+function addBook(req, res) {
+    const id = libriTotali;
+    const title = req.body.title;
+    const author = req.body.author;
+}
+addBook.forEach(book => {
+    BookDB.push({
+        id: id,
+        title: title,
+        author: author
     });
-    if (trovato) {
-        res.statusCode = 200;
-        //View
-        res.send("Benvenuto " + trovato.nome);
-    } else {
-        res.statusCode = 401;
-        //View
-        res.send("Utente non valido");
-    }
 });
 
-app.get('/login', function (req, res) {
-    res.statusCode = 200;
-    //View
-    res.send(`
-        <html><head>Login alla mia app</head>
-        <body>
-        <h1>Benvenuto nella App!!!</h1>
-        <p>Login:</p>
-        <form method="POST" action="/login">
-            <input name="user" type="text"/>
-            <input name="password" type="password"/>
-            <input type="submit"/>
-            
-        </form></body></html>
-        `);
-});
 
 
 
