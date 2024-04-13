@@ -3,9 +3,15 @@ const nocache = require('nocache');
 const app = express();
 const port = 3000;
 
+app.use(logger);
 app.use(nocache());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+function logger(req, res, next) {
+  console.log("Chiamato " + req.url);
+  next();
+}
 
 let BookDB = [
   {
