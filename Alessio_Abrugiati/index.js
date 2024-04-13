@@ -25,9 +25,6 @@ function scriviLibri(libri) {
     }
 }
 
-// Array di libri
-let books = leggiLibri();
-
 app.get("/", (req, res) => {
     res.send("<h1>Benvenuto</h1>")
 })
@@ -45,10 +42,12 @@ app.get("/alessio", (req, res) => {
 // Nuova rotta per ottenere i dettagli di un libro
 app.get("/books/:id", (req, res) => {
     const id = parseInt(req.params.id);
-    const book = books.find(b => b.id === id);
+    const bookDB = leggiLibri(); // Leggi il file JSON dei libri
+
+    const book = bookDB.find(b => b.id === id);
 
     if (book) {
-        res.send(`ID: ${book.id}, Nome: ${book.name}`);
+        res.send(`ID: ${book.id}, Titolo: ${book.title}, Autore: ${book.author}`);
     } else {
         res.send('Libro non trovato');
     }
@@ -68,6 +67,51 @@ app.post("/books", function (req, res) {
     scriviLibri(books);
     res.send("Libro aggiunto alla lista con l'id: " + newBook.id);
 });
+
+// Elimina un singolo libro
+
+// Con questa rotta, puoi inviare una richiesta DELETE a /books/:id specificando l'ID del libro che desideri eliminare.
+// Il codice cerca il libro con quell'ID nell'array dei libri, lo rimuove se lo trova e quindi aggiorna il file JSON dei libri con la lista aggiornata.
+
+app.delete("/books/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+    let bookDB = leggiLibri(); // Leggi il file JSON dei libri
+
+    // Cerca il libro da eliminare
+    const index = bookDB.findIndex(b => b.id === id);
+
+    if (index !== -1) {
+        // Se il libro esiste, rimuovilo dall'array
+        const deletedBook = bookDB.splice(index, 1)[0];
+        // Scrivi la lista aggiornata nel file JSON
+        scriviLibri(bookDB);
+        res.send(`Libro eliminato: ${deletedBook.title} di ${deletedBook.author}`);
+    } else {
+        res.send('Libro non trovato');
+    }
+});
+
+// Ricerca libri per titolo o autore
+
+// Con questa rotta, puoi inviare una richiesta GET a /search?q=termine_di_ricerca dove termine_di_ricerca è 
+// il titolo o l'autore del libro che stai cercando. La funzione filtra i libri in base alla query di ricerca e restituisce i risultati corrispondenti.
+app.get("/search", (req, res) => {
+    const query = req.query.q.toLowerCase(); // Ottieni la query di ricerca dall'URL e convertila in minuscolo
+    const bookDB = leggiLibri(); // Leggi il file JSON dei libri
+
+    // Filtra i libri che corrispondono alla query di ricerca per titolo o autore
+    const results = bookDB.filter(book =>
+        book.title.toLowerCase().includes(query) ||
+        book.author.toLowerCase().includes(query)
+    );
+
+    if (results.length > 0) {
+        res.json(results); // Restituisci i risultati della ricerca in formato JSON
+    } else {
+        res.send('Nessun libro trovato');
+    }
+});
+
 
 // Ottieni tutti i libri
 app.get("/books", (req, res) => {
