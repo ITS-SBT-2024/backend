@@ -62,13 +62,14 @@ function getBookById(req, res) {
 app.get('/books', getBooksDB);
 
 function getBooksDB(req, res) {
-  const { search } = req.query
-  
+  const { search } = req.query;
+
   if (search) {
     console.log(search);
-    res.status(200).send(search)
+    const booksFound = BookDB.filter(book => book.title.toLowerCase().includes(search.toLowerCase()) || book.author.toLowerCase().includes(search.toLowerCase()));
+    res.status(200).send(booksFound);
   } else {
-    res.status(200).send(BookDB)
+    res.status(200).send(BookDB);
   }
 }
 
