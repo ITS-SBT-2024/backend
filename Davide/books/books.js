@@ -62,10 +62,14 @@ function getBookById(req, res) {
 app.get('/books', getBooksDB);
 
 function getBooksDB(req, res) {
-  res.statusCode = 200;
-  // const titleList = BookDB.map(book => book.title);
-  // res.send(titleList);
-  res.send(BookDB)
+  const { search } = req.query
+  
+  if (search) {
+    console.log(search);
+    res.status(200).send(search)
+  } else {
+    res.status(200).send(BookDB)
+  }
 }
 
 app.delete('/books/:id', deleteBookById);
@@ -86,7 +90,7 @@ app.put('/books/:id', substituteBookById);
 
 function substituteBookById(req, res) {
   const { id } = req.params;
-  const { title, author } = req.body
+  const { title, author } = req.body;
 
   const bookFound = BookDB.find(book => id === book.id);
 
@@ -97,6 +101,30 @@ function substituteBookById(req, res) {
   } else {
     addBook(req, res);
   }
+}
+
+app.post('/books/:id', updateBookById);
+
+function updateBookById(req, res) {
+  const { id } = req.params;
+  const { title, author } = req.body;
+
+  const bookFound = BookDB.find(book => id === book.id);
+
+  if (bookFound) {
+    bookFound.title = title;
+    bookFound.author = author;
+    res.status(200).send('Book has been updated');
+  } else {
+    res.status(401).send('Book not found')
+  }
+}
+
+app.delete('/books', deleteBooksDB);
+
+function deleteBooksDB(req, res) {
+  BookDB = [];
+  res.status(200).send('Books database has been deleted')
 }
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

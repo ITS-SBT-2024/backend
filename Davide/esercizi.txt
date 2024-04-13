@@ -1,4 +1,17 @@
-1. PUT di un libro - "Sostituisce l'elemente indirizzato con quello nel body"
-2. POST su un libro - "AGGIORNI UN LIBRO CHE C'è GIà"
-3. DELETE su collezione
-4. su GET dei libri implementa un search (con querystring: ?search="Signore")
+1- GET su /books per fare la ricerca. esempio /books?search=Signore
+2- PUT su /books/:id per sostituire il libro
+3- POST su /books/:id per Aggiornare il libro
+4- DELETE su /books per cancellare tutti i libri
+
+5-Realizzare lettura e salvataggio (ad ogni modifica) del JSON del BookDB su in file.
+   Suggerimenti/Indicazioni:
+   - usare come storage il file data/userdb.json
+   - alla partenza del programma leggere il file, fare il JSON.parse del contenuto e assegnarlo a BookDB
+   - in ogni rotta in cui viene alterato il DB risalvare il file in modo opposto alla lettura:
+     JSON.stringify di BookDB e scrittura su file.
+    N.B.: attenzione alla letturascrittura su file per cui ci sono funzioni sincrone o asincrone.
+
+Infine se avete tempo e voglia copiatevi il file public/login.html in public/books.html
+e provate a implementare in semplicissimo HTML le pagine da cui invocare
+operazioni di lista libra, crea libro, cancella libro, aggiorna libro
+(ovviamente chiamando le rispettive route sul backend)
