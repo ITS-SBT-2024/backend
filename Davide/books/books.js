@@ -1,5 +1,3 @@
-// ! Current issues: Per come sono ora gestite PUT e POST è possibile avdere libri diversi con stesso ID...
-
 const express = require('express');
 const nocache = require('nocache');
 const app = express();
@@ -28,7 +26,7 @@ app.post('/books', addBook);
 
 function addBook(req, res) {
   const { title, author } = req.body;
-  const id = req.params.id || `${numOfBooks}`;
+  const id = `${numOfBooks}`;
   const bookFound = BookDB.find(book => book.title === title && book.author === author);
 
   if (!bookFound) {
