@@ -3,30 +3,19 @@ const app = express();
 const port= 3000;
 
 const nocache = require('nocache');
-<<<<<<< HEAD
-=======
 app.use (logger);
 app.use(express.static('public'));
->>>>>>> d6dafa500e226029925b21041f267bff68fb3d98
 
 app.use(nocache());
 
 app.use(express.urlencoded({ extended: true }));
-<<<<<<< HEAD
-=======
 app.use(express.json());
->>>>>>> d6dafa500e226029925b21041f267bff68fb3d98
 
 function logger (req, res, next){
    console.log("Chiamato "+req.url+"!!!!");
    next();
 }
 
-<<<<<<< HEAD
-app.use (logger);
-=======
-
->>>>>>> d6dafa500e226029925b21041f267bff68fb3d98
 const userDB=[
     {
         username:"maurizio",
@@ -61,8 +50,6 @@ const BookDB=[
 function miafunzione (a,b ) {
    b.send("Hello World from function");
 }
-<<<<<<< HEAD
-=======
 
 function creaLibro (req,res) {
     const tit=req.body.title;
@@ -97,7 +84,6 @@ app.post ("/books", creaLibro);
 app.get ("/books", listaLibri);
 app.delete('/books/:id', cancellaLibro);
 
->>>>>>> d6dafa500e226029925b21041f267bff68fb3d98
 app.get('/books/:id', function(req,res) {
     const id=req.params.id;
 
@@ -140,27 +126,6 @@ app.post('/login', function(req,res) {
     }
 });
 
-<<<<<<< HEAD
-app.get('/login', function(req,res) {
-        res.statusCode=200;
-        //View
-        res.send(`
-        <html><head>Login alla mia app</head>
-        <body>
-        <h1>Benvenuto nella App!!!</h1>
-        <p>Login:</p>
-        <form method="POST" action="/login">
-            <input name="user" type="text"/>
-            <input name="password" type="password"/>
-            <input type="submit"/>
-            
-        </form></body></html>
-        `);
-});
-
-
-=======
->>>>>>> d6dafa500e226029925b21041f267bff68fb3d98
 
 app.get('/', miafunzione);
 app.get('/aaa', function (req, res) {
