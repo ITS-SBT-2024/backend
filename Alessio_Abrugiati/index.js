@@ -8,7 +8,7 @@ const port = 3000;
 function leggiLibri() {
     try {
         const data = fs.readFileSync('./data/bookDB.json', 'utf8');
-        return JSON.parse(data);
+        return JSON.parse(data); // Parse del contenuto bookDB.json
     } catch (err) {
         console.error('Errore durante la lettura del file:', err);
         return [];
