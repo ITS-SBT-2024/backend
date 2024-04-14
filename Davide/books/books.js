@@ -1,5 +1,7 @@
 const express = require('express');
 const nocache = require('nocache');
+const { readFile, writeFile } = require('node:fs/promises')
+
 const app = express();
 const port = 3000;
 
@@ -13,35 +15,43 @@ function logger(req, res, next) {
   next();
 }
 
-let BookDB = [
-  {
-    id: "1",
-    title: "The Lord of the Rings",
-    author: "J.R.R. Tolkien"
-  },
-  {
-    id: "2",
-    title: "Uno Nessuno Centomila",
-    author: "Luigi Pirandello"
-  },
-];
+async function loadBooksDB() {
+  try {
+    const data = await readFile('data/bookdb.json');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
 
-let numOfBooks = BookDB.length + 1;
+let booksDB;
+loadBooksDB().then(data => booksDB = data);
+
+async function saveBooksDB() {
+  try {
+    const data = JSON.stringify(booksDB);
+    await writeFile('data/bookdb.json', data)
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 
 app.post('/books', addBook);
 
 function addBook(req, res) {
   const { title, author } = req.body;
-  const id = `${numOfBooks}`;
-  const bookFound = BookDB.find(book => book.title === title && book.author === author);
+  const id = `${booksDB.length + 1}`;
+  const bookFound = booksDB.find(book => book.title === title && book.author === author);
 
   if (!bookFound) {
-    BookDB.push({
+    booksDB.push({
       id,
       title,
       author
     });
-    numOfBooks++;
+    saveBooksDB();
     res.statusCode = 201;
     res.send(`You added ${title} by ${author} - ID: ${id}`);
   } else {
@@ -54,7 +64,7 @@ app.get('/books/:id', getBookById);
 function getBookById(req, res) {
   const { id } = req.params;
 
-  const bookFound = BookDB.find(book => id === book.id);
+  const bookFound = booksDB.find(book => id === book.id);
 
   if (bookFound) {
     res.statusCode = 200;
@@ -71,11 +81,11 @@ function getBooksDB(req, res) {
   const { search } = req.query;
 
   if (search) {
-    console.log(search);
-    const booksFound = BookDB.filter(book => book.title.toLowerCase().includes(search.toLowerCase()) || book.author.toLowerCase().includes(search.toLowerCase()));
+    console.log('query for: ' + search);
+    const booksFound = booksDB.filter(book => book.title.toLowerCase().includes(search.toLowerCase()) || book.author.toLowerCase().includes(search.toLowerCase()));
     res.status(200).send(booksFound);
   } else {
-    res.status(200).send(BookDB);
+    res.status(200).send(booksDB);
   }
 }
 
@@ -83,10 +93,11 @@ app.delete('/books/:id', deleteBookById);
 
 function deleteBookById(req, res) {
   const { id } = req.params;
-  const bookFound = BookDB.find(book => id === book.id);
+  const bookFound = booksDB.find(book => id === book.id);
 
   if (bookFound) {
-    BookDB = BookDB.filter(book => book.id !== id);
+    booksDB = booksDB.filter(book => book.id !== id);
+    saveBooksDB();
     res.send('Book has been deleted');
   } else {
     res.send('Book not found');
@@ -99,11 +110,12 @@ function substituteBookById(req, res) {
   const { id } = req.params;
   const { title, author } = req.body;
 
-  const bookFound = BookDB.find(book => id === book.id);
+  const bookFound = booksDB.find(book => id === book.id);
 
   if (bookFound) {
     bookFound.title = title;
     bookFound.author = author;
+    saveBooksDB();
     res.status(200).send('Book has been substituted');
   } else {
     addBook(req, res);
@@ -116,11 +128,12 @@ function updateBookById(req, res) {
   const { id } = req.params;
   const { title, author } = req.body;
 
-  const bookFound = BookDB.find(book => id === book.id);
+  const bookFound = booksDB.find(book => id === book.id);
 
   if (bookFound) {
     bookFound.title = title;
     bookFound.author = author;
+    saveBooksDB();
     res.status(200).send('Book has been updated');
   } else {
     res.status(401).send('Book not found')
@@ -130,7 +143,8 @@ function updateBookById(req, res) {
 app.delete('/books', deleteBooksDB);
 
 function deleteBooksDB(req, res) {
-  BookDB = [];
+  booksDB = [];
+  saveBooksDB();
   res.status(200).send('Books database has been deleted')
 }
 
