@@ -68,11 +68,21 @@ app.post("/books", function (req, res) {
     res.send("Libro aggiunto alla lista con l'id: " + newBook.id);
 });
 
+// Aggiungi un nuovo libro
+// Impostare Thunder Client su POST, nel campo URL andare in /books, selezionare la scheda Body, selezione JSON e inserire il nuovo libro.
+app.post("/books", (req, res) => {
+    const newBook = req.body
+    let bookDB = leggiLibri()
+    const newId = bookDB.length > 0 ? bookDB[bookDB.length - 1].id + 1 : 1
+    newBook.id = newId // Aggiungi ID al nuovo libro
+    bookDB.push(newBook) // Aggiungi nuovo libro
+    scriviLibri(bookDB) // Scrivi nel file.json
+    res.send("Libro aggiunto con successo")
+})
+
 // Elimina un singolo libro
 
 // Con questa rotta, puoi inviare una richiesta DELETE a /books/:id specificando l'ID del libro che desideri eliminare.
-// Il codice cerca il libro con quell'ID nell'array dei libri, lo rimuove se lo trova e quindi aggiorna il file JSON dei libri con la lista aggiornata.
-
 app.delete("/books/:id", (req, res) => {
     const id = parseInt(req.params.id);
     let bookDB = leggiLibri(); // Leggi il file JSON dei libri
@@ -94,7 +104,7 @@ app.delete("/books/:id", (req, res) => {
 // Ricerca libri per titolo o autore
 
 // Con questa rotta, puoi inviare una richiesta GET a /search?q=termine_di_ricerca dove termine_di_ricerca è 
-// il titolo o l'autore del libro che stai cercando. La funzione filtra i libri in base alla query di ricerca e restituisce i risultati corrispondenti.
+// il titolo o l'autore del libro che stai cercando.
 app.get("/search", (req, res) => {
     const query = req.query.q.toLowerCase(); // Ottieni la query di ricerca dall'URL e convertila in minuscolo
     const bookDB = leggiLibri(); // Leggi il file JSON dei libri
@@ -115,7 +125,8 @@ app.get("/search", (req, res) => {
 
 // Ottieni tutti i libri
 app.get("/books", (req, res) => {
-    res.json(books);
+    const bookDB = leggiLibri()
+    res.json(bookDB)
 });
 
 app.listen(port, () => { console.log("Backend partito!") });
