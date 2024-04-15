@@ -8,7 +8,7 @@ const port = 3000;
 function leggiLibri() {
     try {
         const data = fs.readFileSync('./data/bookDB.json', 'utf8');
-        return JSON.parse(data); // Parse del contenuto bookDB.json
+        return JSON.parse(data); // Parse del contenuto bookDB.json da stringa a oggetto
     } catch (err) {
         console.error('Errore durante la lettura del file:', err);
         return [];
@@ -18,7 +18,7 @@ function leggiLibri() {
 // Scrivi nel file JSON esterno
 function scriviLibri(libri) {
     try {
-        fs.writeFileSync('./data/bookDB.json', JSON.stringify(libri, null, 2));
+        fs.writeFileSync('./data/bookDB.json', JSON.stringify(libri, null, 2)); // stringify converte da oggetto a stringa
         console.log('File scritto correttamente.');
     } catch (err) {
         console.error('Errore durante la scrittura del file:', err);
