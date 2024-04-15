@@ -85,15 +85,15 @@ app.delete("/books/:id", function (req, res) {
 
 //non funziona
 function ricercaLibro(req, res) {
-    const author = req.params.author
-    const title = req.params.title
+    const author = req.query.author
+    const title = req.query.title
     let librotrovato = false
 
     for (let i = 0; i < BookDB.length; i++) {
         if (author === BookDB[i].author || title === BookDB[i].title) {
             librotrovato = true
             res.statusCode = 200;
-            res.send("libro trovato:", BookDB[i])
+            res.send(200, "libro trovato:" + JSON.stringify(BookDB[i]))
             break
         }
     }
