@@ -1,0 +1,21 @@
+{
+  "name": "backendits",
+  "version": "1.0.0",
+  "description": "Corso ITS",
+  "main": "hello.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev" : "nodemon main/server.js --ignore 'data/' ",
+    "prod" : "node main/server.js"
+    
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0",
+    "nocache": "^4.0.0",
+    "nodemon": "^3.1.0"
+  }
+}
