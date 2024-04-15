@@ -11,17 +11,22 @@ app.use(nocache());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // * nuovo middleware
-app.use(cookieParser())
+app.use(cookieParser());
+app.use(loggedInCheck);
+
+function loggedInCheck(req, res, next) {
+  if (req.cookies.auth) {
+    next();
+  } else {
+    console.log('not logged in');
+    res.status(401).send('Unauthorized')
+  }
+}
 
 function logger(req, res, next, err) {
   console.log("Chiamato " + req.url);
-  if (!err) {
-    next();
-  } else {
-    console.log(err);
-    res.send('non autorizzato')
-  };
-}
+  next();
+};
 
 async function loadBooksDB() {
   try {
@@ -39,7 +44,7 @@ loadBooksDB().then(data => booksDB = data);
 async function saveBooksDB() {
   try {
     const data = JSON.stringify(booksDB, null, 4);
-    await writeFile('data/bookdb.json', data)
+    await writeFile('data/bookdb.json', data);
   } catch (err) {
     console.error(err);
   }
