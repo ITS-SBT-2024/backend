@@ -136,7 +136,7 @@ function updateBookById(req, res) {
     saveBooksDB();
     res.status(200).send('Book has been updated');
   } else {
-    res.status(401).send('Book not found')
+    res.status(401).send('Book not found');
   }
 }
 
@@ -145,7 +145,7 @@ app.delete('/books', deleteBooksDB);
 function deleteBooksDB(req, res) {
   booksDB = [];
   saveBooksDB();
-  res.status(200).send('Books database has been deleted')
+  res.status(200).send('Books database has been deleted');
 }
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () => console.log(`Live on http://localhost:${port}/books`));
