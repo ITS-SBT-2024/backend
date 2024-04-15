@@ -13,6 +13,9 @@ app.use(nocache());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+let BookDB;
+let userDB;
+
 function logger (req, res, next){
    console.log("Chiamato "+req.url+"!!!!");
    next();
@@ -54,9 +57,9 @@ async function saveUserDB(){
 
 async function main (){
 
-    let userDB= await loadUserDB();
+    userDB= await loadUserDB();
     console.log("prima del loadDB");
-    let BookDB=await loadBookDB();
+    BookDB=await loadBookDB();
     console.log("dopo il loadDB");
 
     function miafunzione (a,b ) {
