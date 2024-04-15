@@ -52,131 +52,129 @@ async function saveUserDB(){
     }    
 }
 
+async function main (){
 
-let userDB;
-loadUserDB().then(r => userDB=r);
-let BookDB;
-console.log("Prima del loadDB");
-loadBookDB().then( r => {
-    
-    BookDB=r
-    console.log ("Caricato DB");
-});
-console.log("dopo il loadDB");
+    let userDB= await loadUserDB();
+    console.log("prima del loadDB");
+    let BookDB=await loadBookDB();
+    console.log("dopo il loadDB");
 
-function miafunzione (a,b ) {
-   b.send("Hello World from function");
-}
+    function miafunzione (a,b ) {
+    b.send("Hello World from function");
+    }
 
-function creaLibro (req,res) {
-    const tit=req.body.title;
-    const aut=req.body.author;
-    const newid=BookDB.length+1;
-    BookDB.push({id: newid, title: tit, author:aut});
-    res.send ({id:newid}); 
-    saveBookDB();
-};
+    function creaLibro (req,res) {
+        const tit=req.body.title;
+        const aut=req.body.author;
+        const newid=BookDB.length+1;
+        BookDB.push({id: newid, title: tit, author:aut});
+        res.send ({id:newid}); 
+        saveBookDB();
+    };
 
-function listaLibri (req,res) {
-    res.send(BookDB);
-};
+    function listaLibri (req,res) {
+        res.send(BookDB);
+    };
 
-function cancellaLibro (req,res) {
-    let index = -1;
-    for (let i=0; i< BookDB.length && index <0; i++){
-        if (BookDB[i].id == req.params.id) {
-            index=i;
+    function cancellaLibro (req,res) {
+        let index = -1;
+        for (let i=0; i< BookDB.length && index <0; i++){
+            if (BookDB[i].id == req.params.id) {
+                index=i;
+            }
         }
-    }
-    if (index >=0 ){
-        BookDB.splice(index,1);
-        res.statusCode=200;
-        res.send({"status":"done"});
-        saveBookDB();
-    } else {
-        res.statusCode=404;
-        res.send();
-    }
-};
-
-function aggiornaLibro (req,res) {
-    let index = -1;
-    for (let i=0; i< BookDB.length && index <0; i++){
-        if (BookDB[i].id == req.params.id) {
-            index=i;
+        if (index >=0 ){
+            BookDB.splice(index,1);
+            res.statusCode=200;
+            res.send({"status":"done"});
+            saveBookDB();
+        } else {
+            res.statusCode=404;
+            res.send();
         }
-    }
-    if (index >=0 ){
-        BookDB[index].title=req.body.title;
-        BookDB[index].author=req.body.author;
-        res.statusCode=200;
-        res.send({"status":"done"});
-        saveBookDB();
-    } else {
-        res.statusCode=404;
-        res.send();
-    }
-};
-function cancellaTuttiLibri (req,res) {
-        BookDB=[];
-        res.statusCode=200;
-        res.send({"status":"done"});
-        saveBookDB();
-};
+    };
 
-app.post ("/books", creaLibro);
-app.post('/books/:id', aggiornaLibro);
-app.get ("/books", listaLibri);
-app.delete('/books/:id', cancellaLibro);
-app.delete('/books', cancellaTuttiLibri);
+    function aggiornaLibro (req,res) {
+        let index = -1;
+        for (let i=0; i< BookDB.length && index <0; i++){
+            if (BookDB[i].id == req.params.id) {
+                index=i;
+            }
+        }
+        if (index >=0 ){
+            BookDB[index].title=req.body.title;
+            BookDB[index].author=req.body.author;
+            res.statusCode=200;
+            res.send({"status":"done"});
+            saveBookDB();
+        } else {
+            res.statusCode=404;
+            res.send();
+        }
+    };
+    function cancellaTuttiLibri (req,res) {
+            BookDB=[];
+            res.statusCode=200;
+            res.send({"status":"done"});
+            saveBookDB();
+    };
 
-app.get('/books/:id', function(req,res) {
-    const id=req.params.id;
+    app.post ("/books", creaLibro);
+    app.post('/books/:id', aggiornaLibro);
+    app.get ("/books", listaLibri);
+    app.delete('/books/:id', cancellaLibro);
+    app.delete('/books', cancellaTuttiLibri);
 
-    trovato=null;
-    BookDB.forEach (u => {
-        if (u.id == id) {
-            trovato=u;
-        } 
+    app.get('/books/:id', function(req,res) {
+        const id=req.params.id;
+
+        trovato=null;
+        BookDB.forEach (u => {
+            if (u.id == id) {
+                trovato=u;
+            } 
+        });
+        if (trovato ){
+            res.statusCode=200;
+            //View
+            res.json(trovato);
+        } else {
+            res.statusCode=404;
+            //View
+            res.json();
+        }
     });
-    if (trovato ){
-        res.statusCode=200;
-        //View
-        res.json(trovato);
-    } else {
-        res.statusCode=404;
-        //View
-        res.json();
-    }
-});
 
 
-app.post('/login', function(req,res) {
-    const user=req.body.user;
-    const pass=req.body.password;
-    console.log("user="+user + "pass="+pass);
-    trovato=null;
-    userDB.forEach (u => {
-        if (u.username == user && u.password==pass) {
-            trovato=u;
-        } 
+    app.post('/login', function(req,res) {
+        const user=req.body.user;
+        const pass=req.body.password;
+        console.log("user="+user + "pass="+pass);
+        trovato=null;
+        userDB.forEach (u => {
+            if (u.username == user && u.password==pass) {
+                trovato=u;
+            } 
+        });
+        if (trovato ){
+            res.statusCode=200;
+            //View
+            res.send("Benvenuto "+trovato.nome);
+        } else {
+            res.statusCode=401;
+            //View
+            res.send("Utente non valido");
+        }
     });
-    if (trovato ){
-        res.statusCode=200;
-        //View
-        res.send("Benvenuto "+trovato.nome);
-    } else {
-        res.statusCode=401;
-        //View
-        res.send("Utente non valido");
-    }
-});
 
 
-app.get('/', miafunzione);
-app.get('/aaa', function (req, res) {
-    res.send('Hello from AAA')
-});
-console.log ("Prima dello start del server");
-app.listen (port,() => {console.log ("Backend partito!")});
-console.log ("dopo lo start del server");
+    app.get('/', miafunzione);
+    app.get('/aaa', function (req, res) {
+        res.send('Hello from AAA')
+    });
+    console.log ("Prima dello start del server");
+    app.listen (port,() => {console.log ("Backend partito!")});
+    console.log ("dopo lo start del server");
+} 
+
+main();
