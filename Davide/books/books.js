@@ -1,29 +1,5 @@
 const express = require('express');
 const nocache = require('nocache');
-<<<<<<< HEAD
-const app = express();
-const port = 3000;
-
-app.use(nocache());
-app.use(express.urlencoded({ extended: true }));
-// * Per prossimo esercizio:
-// * app.use(express.json());
-
-let BookDB = [
-  {
-    id: "1",
-    title: "The Lord of the Rings",
-    author: "J.R.R. Tolkien"
-  },
-  {
-    id: "2",
-    title: "Uno Nessuno Centomila",
-    author: "Luigi Pirandello"
-  },
-];
-
-let numOfBooks = BookDB.length + 1;
-=======
 const { readFile, writeFile } = require('node:fs/promises')
 
 const app = express();
@@ -61,26 +37,11 @@ async function saveBooksDB() {
   }
 }
 
->>>>>>> 0f81e158d21d27115300eea220918e1fb4a6ce72
 
 app.post('/books', addBook);
 
 function addBook(req, res) {
   const { title, author } = req.body;
-<<<<<<< HEAD
-  const id = `${numOfBooks}`;
-
-  BookDB.push({
-    id,
-    title,
-    author
-  })
-
-  res.statusCode = 201;
-  console.log('Book added');
-  res.send(`You added ${title} by ${author} - ID: ${id}`)
-};
-=======
   const id = `${booksDB.length + 1}`;
   const bookFound = booksDB.find(book => book.title === title && book.author === author);
 
@@ -97,25 +58,12 @@ function addBook(req, res) {
     res.status(200).send('Book already in DB');
   }
 }
->>>>>>> 0f81e158d21d27115300eea220918e1fb4a6ce72
 
 app.get('/books/:id', getBookById);
 
 function getBookById(req, res) {
   const { id } = req.params;
 
-<<<<<<< HEAD
-  const bookFound = BookDB.find(book => id === book.id);
-
-  if (bookFound) {
-    res.statusCode = 200;
-    console.log('book found');
-    res.send(`${bookFound.title} by ${bookFound.author}`)
-  } else {
-    res.statusCode = 401;
-    console.log('not found');
-    res.send('Book not found')
-=======
   const bookFound = booksDB.find(book => id === book.id);
 
   if (bookFound) {
@@ -124,18 +72,12 @@ function getBookById(req, res) {
   } else {
     res.statusCode = 401;
     res.send('Book not found');
->>>>>>> 0f81e158d21d27115300eea220918e1fb4a6ce72
   }
 }
 
 app.get('/books', getBooksDB);
 
 function getBooksDB(req, res) {
-<<<<<<< HEAD
-  res.statusCode = 200;
-  const titleList = BookDB.map(book => book.title);
-  res.send(titleList)
-=======
   const { search } = req.query;
 
   if (search) {
@@ -145,26 +87,12 @@ function getBooksDB(req, res) {
   } else {
     res.status(200).send(booksDB);
   }
->>>>>>> 0f81e158d21d27115300eea220918e1fb4a6ce72
 }
 
 app.delete('/books/:id', deleteBookById);
 
 function deleteBookById(req, res) {
   const { id } = req.params;
-<<<<<<< HEAD
-  let found = false;
-
-  BookDB.forEach(book => {
-    if (id === book.id) {
-      found = true;
-      BookDB = BookDB.filter(book => book.id !== id);
-      console.log('book deleted');
-      res.send('Book has been deleted');
-    }
-  })
-  if (!found) {
-=======
   const bookFound = booksDB.find(book => id === book.id);
 
   if (bookFound) {
@@ -172,14 +100,10 @@ function deleteBookById(req, res) {
     saveBooksDB();
     res.send('Book has been deleted');
   } else {
->>>>>>> 0f81e158d21d27115300eea220918e1fb4a6ce72
     res.send('Book not found');
   }
 }
 
-<<<<<<< HEAD
-app.listen(port, () => console.log(`Listening on port ${port}`));
-=======
 app.put('/books/:id', substituteBookById);
 
 function substituteBookById(req, res) {
@@ -225,4 +149,3 @@ function deleteBooksDB(req, res) {
 }
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
->>>>>>> 0f81e158d21d27115300eea220918e1fb4a6ce72
