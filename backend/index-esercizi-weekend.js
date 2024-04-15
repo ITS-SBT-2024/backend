@@ -1,4 +1,6 @@
 const express = require("express");
+const fs = require("fs").promises;
+
 const app = express();
 const port= 3000;
 
@@ -15,37 +17,42 @@ function logger (req, res, next){
    console.log("Chiamato "+req.url+"!!!!");
    next();
 }
-
-const userDB=[
-    {
-        username:"maurizio",
-        password:"123",
-        nome:"Maurizio D'Ottavi"
-    },
-    {
-        username:"gigi",
-        password:"345",
-        nome:"Pierluigi Alessandrini"
-    },
-    {
-        username:"bill",
-        password:"678",
-        nome:"William Shakespeare"
-    },
-];
-const BookDB=[
-    {
-        id:"1",
-        title:"The Lord of the Rings",
-        author:"J.R.R. Tolkien"
-    },
-    {
-        id:"2",
-        title:"Uno Nessuno Centomila",
-        author:"Luigi Pirandello"
-    },
-
-];
+async function loadBookDB (){
+    try {
+        const fileContent=await fs.readFile('data/bookdb.json');
+        return JSON.parse(fileContent);
+    } catch (err){
+        console.log("ERRORE Lettura BookDB: "+err);
+        return [];
+    }
+}
+async function loadUserDB (){
+    try {
+        const fileContent=await fs.readFile('data/userdb.json');
+        return JSON.parse(fileContent);
+    } catch (err){
+        console.log("ERRORE Lettura UserDB: "+err);
+        return [];
+    }
+}
+async function saveBookDB(){
+    try {
+        await fs.writeFile('data/bookdb.json', JSON.stringify(BookDB,null,4));
+    } catch (err){
+        console.log("ERRORE Scrittura BookDB: "+err);
+    }    
+}
+async function saveUserDB(){
+    try {
+        await fs.writeFile('data/userdb.json', JSON.stringify(userDB,null,4));
+    } catch (err){
+        console.log("ERRORE Scrittura UserDB: "+err);
+    }    
+}
+let userDB;
+loadUserDB().then(r => userDB=r);
+let BookDB;
+loadBookDB().then(r => BookDB=r);;
 
 function miafunzione (a,b ) {
    b.send("Hello World from function");
@@ -57,6 +64,7 @@ function creaLibro (req,res) {
     const newid=BookDB.length+1;
     BookDB.push({id: newid, title: tit, author:aut});
     res.send ({id:newid}); 
+    saveBookDB();
 };
 
 function listaLibri (req,res) {
@@ -73,16 +81,44 @@ function cancellaLibro (req,res) {
     if (index >=0 ){
         BookDB.splice(index,1);
         res.statusCode=200;
-        res.send("OK");
+        res.send({"status":"done"});
+        saveBookDB();
     } else {
         res.statusCode=404;
-        res.send("Libro non trovato");
+        res.send();
     }
 };
 
+function aggiornaLibro (req,res) {
+    let index = -1;
+    for (let i=0; i< BookDB.length && index <0; i++){
+        if (BookDB[i].id == req.params.id) {
+            index=i;
+        }
+    }
+    if (index >=0 ){
+        BookDB[index].title=req.body.title;
+        BookDB[index].author=req.body.author;
+        res.statusCode=200;
+        res.send({"status":"done"});
+        saveBookDB();
+    } else {
+        res.statusCode=404;
+        res.send();
+    }
+};
+function cancellaTuttiLibri (req,res) {
+        BookDB=[];
+        res.statusCode=200;
+        res.send({"status":"done"});
+        saveBookDB();
+};
+
 app.post ("/books", creaLibro);
+app.post('/books/:id', aggiornaLibro);
 app.get ("/books", listaLibri);
 app.delete('/books/:id', cancellaLibro);
+app.delete('/books', cancellaTuttiLibri);
 
 app.get('/books/:id', function(req,res) {
     const id=req.params.id;
@@ -96,11 +132,11 @@ app.get('/books/:id', function(req,res) {
     if (trovato ){
         res.statusCode=200;
         //View
-        res.send("Trovato libro Titolo: "+trovato.title + " Autore:" + trovato.author);
+        res.json(trovato);
     } else {
         res.statusCode=404;
         //View
-        res.send("Libro non presente nella nostra libreria...");
+        res.json();
     }
 });
 
