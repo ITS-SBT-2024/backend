@@ -16,6 +16,7 @@ function logger (req, res, next){
    next();
 }
 
+app.use (logger);
 const userDB=[
     {
         username:"maurizio",
