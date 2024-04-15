@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elenco Dei Libri</title>
+</head>
+<body>
+
+<h1>Elenco Libri</h1>
+<ul id="elencoLibri">
+</ul>
+<input type="text" id="idCercato" placeholder="Inserisci ID libro">
+<button onclick="cerca()">Cerca Libro</button>
+<br><br>
+<input type="text" id="idLibro" placeholder="ID Libro">
+<input type="text" id="nomeLibro" placeholder="Nome Libro">
+<button onclick="aggiungi()">Aggiungi Libro</button>
+<br><br>
+<input type="text" id="idModifica" placeholder="ID Libro da modificare">
+<input type="text" id="nuovoNome" placeholder="Nuovo nome">
+<button onclick="modifica()">Modifica Libro</button>
+<br><br>
+<input type="text" id="idElimina" placeholder="ID Libro da eliminare">
+<button onclick="elimina()">Elimina Libro</button>
+<br><br>
+<button onclick="eliminaCollezione()">Elimina Collezione di Libri</button>
+<br><br>
+<script>
+  function mostraElencoLibri() {
+    var elencoLibri = document.getElementById("elencoLibri");
+    elencoLibri.innerHTML = "";
+
+    libri.forEach(function(libro) {
+      var listItem = document.createElement("li");
+      listItem.textContent = libro.nome + " (ID: " + libro.id + ")";
+      elencoLibri.appendChild(listItem);
+    });
+  }
+
+  function cerca() {
+    var idCercato = document.getElementById("idCercato").value;
+    var libroTrovato = libri.find(function(libro) {
+      return libro.id === idCercato;
+    });
+
+    if (libroTrovato) {
+      alert("Libro trovato: " + libroTrovato.nome);
+    } else {
+      alert("Nessun libro trovato con l'ID specificato.");
+    }
+  }
+
+  function aggiungi() {
+    var nomeLibro = document.getElementById("nomeLibro").value;
+    var idLibro = document.getElementById("idLibro").value;
+    libri.push({ nome: nomeLibro, id: idLibro });
+    mostraElencoLibri();
+  }
+
+  function modifica() {
+    var idModifica = document.getElementById("idModifica").value;
+    var nuovoNome = document.getElementById("nuovoNome").value;
+    var libroDaModificare = libri.find(function(libro) {
+      return libro.id === idModifica;
+    });
+
+    if (libroDaModificare) {
+      libroDaModificare.nome = nuovoNome;
+      mostraElencoLibri();
+    } else {
+      alert("Nessun libro trovato con l'ID specificato");
+    }
+  }
+
+  function elimina() {
+    var idElimina = document.getElementById("idElimina").value;
+    var indiceLibro = libri.findIndex(function(libro) {
+      return libro.id === idElimina;
+    });
+
+    if (indiceLibro !== -1) {
+      libri.splice(indiceLibro, 1);
+      mostraElencoLibri();
+    } else {
+      alert("Nessun libro trovato con l'ID specificato");
+    }
+  }
+
+  function eliminaCollezione() {
+    var conferma = confirm("Sei sicuro di voler eliminare l'intera collezione di libri?");
+    if (conferma) {
+      libri = [];
+      mostraElencoLibri();
+    }
+  }
+  var libri = [
+    { "nome": "Dorian Grey", "id": "1" },
+    { "nome": "Il Fabbricante", "id": "2" },
+    { "nome": "Olimpo", "id": "3" }
+  ];
+  mostraElencoLibri();
+</script>
+
+</body>
+</html>
