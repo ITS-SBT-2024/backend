@@ -23,7 +23,7 @@ function loggedInCheck(req, res, next) {
   }
 }
 
-function logger(req, res, next, err) {
+function logger(req, res, next) {
   console.log("Chiamato " + req.url);
   next();
 };
