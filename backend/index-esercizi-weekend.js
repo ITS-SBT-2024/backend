@@ -20,6 +20,7 @@ function logger (req, res, next){
 async function loadBookDB (){
     try {
         const fileContent=await fs.readFile('data/bookdb.json');
+        
         return JSON.parse(fileContent);
     } catch (err){
         console.log("ERRORE Lettura BookDB: "+err);
@@ -29,6 +30,7 @@ async function loadBookDB (){
 async function loadUserDB (){
     try {
         const fileContent=await fs.readFile('data/userdb.json');
+        
         return JSON.parse(fileContent);
     } catch (err){
         console.log("ERRORE Lettura UserDB: "+err);
@@ -49,10 +51,18 @@ async function saveUserDB(){
         console.log("ERRORE Scrittura UserDB: "+err);
     }    
 }
+
+
 let userDB;
 loadUserDB().then(r => userDB=r);
 let BookDB;
-loadBookDB().then(r => BookDB=r);;
+console.log("Prima del loadDB");
+loadBookDB().then( r => {
+    
+    BookDB=r
+    console.log ("Caricato DB");
+});
+console.log("dopo il loadDB");
 
 function miafunzione (a,b ) {
    b.send("Hello World from function");
@@ -167,5 +177,6 @@ app.get('/', miafunzione);
 app.get('/aaa', function (req, res) {
     res.send('Hello from AAA')
 });
-
+console.log ("Prima dello start del server");
 app.listen (port,() => {console.log ("Backend partito!")});
+console.log ("dopo lo start del server");
