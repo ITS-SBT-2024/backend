@@ -1,27 +1,33 @@
 [
-    {
-        "id": 1,
-        "title": "Il nome della rosa",
-        "author": "Umberto Eco"
-    },
-    {
-        "id": 2,
-        "title": "Il pendolo di Foucault",
-        "author": "Umberto Eco"
-    },
-    {
-        "id": 3,
-        "title": "L'isola del giorno prima",
-        "author": "Umberto Eco"
-    },
-    {
-        "id": 4,
-        "title": "1984",
-        "author": "George Orwell"
-    },
-    {
-        "id": 5,
-        "title": "Il signore degli anelli",
-        "author": "J.R.R. Tolkien"
-    }
+  {
+    "id": 1,
+    "title": "Il nome della rosa",
+    "author": "Umberto Eco"
+  },
+  {
+    "id": 2,
+    "title": "Il pendolo di Foucault",
+    "author": "Umberto Eco"
+  },
+  {
+    "id": 3,
+    "title": "L'isola del giorno prima",
+    "author": "Umberto Eco"
+  },
+  {
+    "id": 4,
+    "title": "1984",
+    "author": "George Orwell"
+  },
+  {
+    "id": 5,
+    "title": "Il signore degli anelli",
+    "author": "J.R.R. Tolkien"
+  },
+  {
+    "title": "Titolo del nuovo libro",
+    "author": "Autore del nuovo libro",
+    "otherInfo": "Altri dettagli del nuovo libro",
+    "id": 7
+  }
 ]

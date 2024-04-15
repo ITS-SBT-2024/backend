@@ -6,11 +6,11 @@ const port = 3000;
 
 app.use(express.static('public'));
 app.use(express.json());
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(nocache());
+// app.use(nocache());
+// app.use(isUserAuth);
 
-app.use(isUserAuth);
 // Attenzione questo e' un uso selettivo di un middleware solo su alcune routes
 // vuold dire che questo middleware si applica solo alle roote
 // ve lo spiego domani ma fa uso di espressioni regolari per indicare una famiglia di URL 
@@ -65,21 +65,6 @@ app.get("/books/:id", (req, res) => {
         res.send('Libro non trovato');
     }
 })
-
-app.post("/books", function (req, res) {
-    const title = req.body.title;
-    const author = req.body.author;
-    let newBook =
-    {
-        title: title,
-        author: author,
-        id: books.length + 1
-    };
-    books.push(newBook);
-    // Scrivi la lista aggiornata nel file JSON
-    scriviLibri(books);
-    res.send("Libro aggiunto alla lista con l'id: " + newBook.id);
-});
 
 // Aggiungi un nuovo libro
 // Impostare Thunder Client su POST, nel campo URL andare in /books, selezionare la scheda Body, selezione JSON e inserire il nuovo libro.
@@ -143,24 +128,24 @@ app.get("/books", (req, res) => {
 });
 
 
-function isUserAuth (req, res, next){
-    console.log("isUserAuth... cookies=", req.cookies);
-    if ( req.url=="/login" && req.method=="POST") {
-        // se ci viene chiesta la login lo facciamo passare perche' vuol dire che l'utente 
-        // vuole authenticarsi e lo permettiamo
-        next();
-        return;
-    }
-    if (req.cookies && req.cookies.authenticato) {
-        console.log("URL:"+req.url + " user:"+req.cookies.authenticato);
-        // qui nella realtà dovremmo controllare che in effetti l'utente esista davvero e
-        // la stringa di cookie dovrebbe essere criptata per evitare manomissioni
-        // ma noi per ora ce ne freghiamo...
-        next();
-    } else {
-        res.statusCode=401;
-        res.json({"msg":"Login Failed"});
-    }
-}
+// function isUserAuth (req, res, next){
+//     console.log("isUserAuth... cookies=", req.cookies);
+//     if ( req.url=="/login" && req.method=="POST") {
+//         // se ci viene chiesta la login lo facciamo passare perche' vuol dire che l'utente 
+//         // vuole authenticarsi e lo permettiamo
+//         next();
+//         return;
+//     }
+//     if (req.cookies && req.cookies.authenticato) {
+//         console.log("URL:"+req.url + " user:"+req.cookies.authenticato);
+//         // qui nella realtà dovremmo controllare che in effetti l'utente esista davvero e
+//         // la stringa di cookie dovrebbe essere criptata per evitare manomissioni
+//         // ma noi per ora ce ne freghiamo...
+//         next();
+//     } else {
+//         res.statusCode=401;
+//         res.json({"msg":"Login Failed"});
+//     }
+// }
 
 app.listen(port, () => { console.log("Backend partito!") });
