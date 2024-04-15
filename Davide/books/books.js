@@ -30,7 +30,7 @@ loadBooksDB().then(data => booksDB = data);
 
 async function saveBooksDB() {
   try {
-    const data = JSON.stringify(booksDB);
+    const data = JSON.stringify(booksDB, null, 4);
     await writeFile('data/bookdb.json', data)
   } catch (err) {
     console.error(err);
