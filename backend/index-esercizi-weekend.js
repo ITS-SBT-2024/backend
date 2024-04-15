@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs").promises;
+var cookieParser = require('cookie-parser');
 
 const app = express();
 const port= 3000;
@@ -12,6 +13,7 @@ app.use(nocache());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 let BookDB;
 let userDB;
@@ -76,6 +78,15 @@ async function main (){
     };
 
     function listaLibri (req,res) {
+        if (req.cookies) {
+            if (req.cookies.authenticato) {
+
+            } else {
+                res.send(401,"Non autorizzato");
+            }
+           console.log ("Cookies ricevuti "+ JSON.stringify(req.cookies));
+        }
+        
         res.send(BookDB);
     };
 
@@ -162,10 +173,12 @@ async function main (){
         if (trovato ){
             res.statusCode=200;
             //View
+            res.cookie("authenticato", user);
             res.send("Benvenuto "+trovato.nome);
         } else {
             res.statusCode=401;
             //View
+            
             res.send("Utente non valido");
         }
     });
