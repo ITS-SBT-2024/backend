@@ -11,6 +11,11 @@
   "dependencies": {
     "express": "^4.19.2",
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    "morgan": "^1.10.0",
+    "nocache": "^4.0.0",
+>>>>>>> main
 =======
     "morgan": "^1.10.0",
     "nocache": "^4.0.0",

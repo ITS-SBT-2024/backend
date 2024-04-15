@@ -4,6 +4,11 @@ const port= 3000;
 
 const nocache = require('nocache');
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+app.use (logger);
+app.use(express.static('public'));
+>>>>>>> main
 =======
 app.use (logger);
 app.use(express.static('public'));
@@ -13,6 +18,10 @@ app.use(nocache());
 
 app.use(express.urlencoded({ extended: true }));
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+app.use(express.json());
+>>>>>>> main
 =======
 app.use(express.json());
 >>>>>>> main
@@ -23,9 +32,13 @@ function logger (req, res, next){
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 app.use (logger);
 =======
 
+>>>>>>> main
+=======
+app.use (logger);
 >>>>>>> main
 const userDB=[
     {
@@ -62,7 +75,10 @@ function miafunzione (a,b ) {
    b.send("Hello World from function");
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> main
 
 function creaLibro (req,res) {
     const tit=req.body.title;
@@ -97,6 +113,9 @@ app.post ("/books", creaLibro);
 app.get ("/books", listaLibri);
 app.delete('/books/:id', cancellaLibro);
 
+<<<<<<< HEAD
+>>>>>>> main
+=======
 >>>>>>> main
 app.get('/books/:id', function(req,res) {
     const id=req.params.id;
@@ -141,6 +160,7 @@ app.post('/login', function(req,res) {
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 app.get('/login', function(req,res) {
         res.statusCode=200;
         //View
@@ -159,6 +179,8 @@ app.get('/login', function(req,res) {
 });
 
 
+=======
+>>>>>>> main
 =======
 >>>>>>> main
 
