@@ -1,5 +1,6 @@
 const express = require('express');
 const nocache = require('nocache');
+const cookieParser = require('cookie-parser');
 const { readFile, writeFile } = require('node:fs/promises')
 
 const app = express();
@@ -9,10 +10,17 @@ app.use(logger);
 app.use(nocache());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// * nuovo middleware
+app.use(cookieParser())
 
-function logger(req, res, next) {
+function logger(req, res, next, err) {
   console.log("Chiamato " + req.url);
-  next();
+  if (!err) {
+    next();
+  } else {
+    console.log(err);
+    res.send('non autorizzato')
+  };
 }
 
 async function loadBooksDB() {
