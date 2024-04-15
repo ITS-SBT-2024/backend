@@ -4,6 +4,19 @@ const fs = require("fs");
 const app = express();
 const port = 3000;
 
+app.use(express.static('public'));
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use(nocache());
+
+app.use(isUserAuth);
+// Attenzione questo e' un uso selettivo di un middleware solo su alcune routes
+// vuold dire che questo middleware si applica solo alle roote
+// ve lo spiego domani ma fa uso di espressioni regolari per indicare una famiglia di URL 
+// tutti quelli che iniziano per "/books"
+// app.use(/^\/books(.*)/,isUserAuth);
+
 // Leggi il file JSON esterno
 function leggiLibri() {
     try {
@@ -128,5 +141,26 @@ app.get("/books", (req, res) => {
     const bookDB = leggiLibri()
     res.json(bookDB)
 });
+
+
+function isUserAuth (req, res, next){
+    console.log("isUserAuth... cookies=", req.cookies);
+    if ( req.url=="/login" && req.method=="POST") {
+        // se ci viene chiesta la login lo facciamo passare perche' vuol dire che l'utente 
+        // vuole authenticarsi e lo permettiamo
+        next();
+        return;
+    }
+    if (req.cookies && req.cookies.authenticato) {
+        console.log("URL:"+req.url + " user:"+req.cookies.authenticato);
+        // qui nella realtà dovremmo controllare che in effetti l'utente esista davvero e
+        // la stringa di cookie dovrebbe essere criptata per evitare manomissioni
+        // ma noi per ora ce ne freghiamo...
+        next();
+    } else {
+        res.statusCode=401;
+        res.json({"msg":"Login Failed"});
+    }
+}
 
 app.listen(port, () => { console.log("Backend partito!") });
