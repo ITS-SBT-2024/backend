@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan')
 const nocache = require('nocache');
 const cookieParser = require('cookie-parser');
 const { readFile, writeFile } = require('node:fs/promises')
@@ -7,6 +8,8 @@ const app = express();
 const port = 3000;
 
 app.use(logger);
+// * morgan dà info tipo logger
+app.use(morgan('dev')) // 'combined' - 'tiny'
 app.use(nocache());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -33,7 +36,7 @@ async function loadBooksDB() {
     const data = await readFile('data/bookdb.json');
     return JSON.parse(data);
   } catch (err) {
-    console.error(err);
+    console.log('Error reading file');
     return [];
   }
 }
