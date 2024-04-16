@@ -17,7 +17,8 @@ async function action(method,url, data = null) {
     } else {
         if (response.status == 401) {
             console.log("Utente non loggato...");
-            document.location="/login.html";
+            alert ("Fare login prima di accedere ai nostri servizi...");
+            createLoginForm();
         } else {
             // In caso di altri errori lo notifico all'utente che l'azione non e'
             // andataa bhuon fine...
@@ -120,3 +121,31 @@ async function replaceBook (id){
     }
     listBooks ();
 }         
+function createLoginForm(){
+    // Funzione che crea un form al volo e lo visualizza al posto della lista
+    let form="<h2>Login</h2><br/>User:<input type='text' id='username' size=15/><br/>";
+    form+="Password:<input type='password' id='password' size=15/><br/>";
+    form+="<button onclick='doLogin()'>Login!</button>";
+    
+    let r=document.getElementById("results");
+    r.innerHTML=form;
+}
+async function doLogin (){
+    // Funzione che prende i dati inseriti crea il libro sul server e richiama la lista 
+    console.log("Login...");
+    let u=document.getElementById("username").value;
+    let p=document.getElementById("password").value;
+    res=await action("POST", "/login", {"user":u,"password":p});
+    if (!res) {
+        alert ("Errore Authenticazione");
+    } else {
+        let r=document.getElementById("results");
+        r.innerHTML="<h2>Benvenuto "+res.user+"!</h2>";
+    }
+    
+}
+async function doLogout (){
+    // Funzione che prende i dati inseriti crea il libro sul server e richiama la lista 
+    console.log("Logout...");
+    res=await action("GET", "/logout");    
+}
