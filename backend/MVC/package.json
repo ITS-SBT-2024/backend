@@ -5,26 +5,17 @@
   "main": "hello.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev" : "npm run development",
-    "development" : "nodemon index-esercizi-lunedi.js",
-    "production" : "node index-esercizi-lunedi.js",
-    "prod" : "npm run production"
+    "dev" : "nodemon main/server.js --ignore 'data/' ",
+    "prod" : "node main/server.js"
+    
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "express": "^4.19.2",
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     "morgan": "^1.10.0",
     "nocache": "^4.0.0",
->>>>>>> main
-=======
-    "morgan": "^1.10.0",
-    "nocache": "^4.0.0",
->>>>>>> main
     "nodemon": "^3.1.0"
   }
 }
