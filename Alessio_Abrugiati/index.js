@@ -1,9 +1,11 @@
 const express = require("express");
 const fs = require("fs");
+const morgan = require("morgan") // Logger per il progetto
 
 const app = express();
 const port = 3000;
 
+app.use(morgan("combined"))
 app.use(express.static('public'));
 app.use(express.json());
 // app.use(cookieParser());
