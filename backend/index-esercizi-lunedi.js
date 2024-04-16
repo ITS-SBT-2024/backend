@@ -1,22 +1,63 @@
 const express = require("express");
 const fs = require("fs").promises;
 var cookieParser = require('cookie-parser');
+const morgan = require ('morgan');
 
 const app = express();
 const port= 3000;
 
+app.use(morgan("dev"));
 const nocache = require('nocache');
 app.use (logger);
-app.use(express.static('public'));
 
+app.use(express.static('public'));
+// Middleware di authenticazione applciato a tutte le rotte tranne che i file statici
+app.use(cookieParser());
+app.use(isUserAuth);
+// Attenzione questo e' un uso selettivo di un middleware solo su alcune routes
+// vuold dire che questo middleware si applica solo alle roote
+// ve lo spiego domani ma fa uso di espressioni regolari per indicare una famiglia di URL 
+// tutti quelli che iniziano per "/books"
+// app.use(/^\/books(.*)/,isUserAuth);
 app.use(nocache());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cookieParser());
+
+
+// metto isUserAuth dopo cookieParser perche' accedo ai cookie che cookie parser ha reso disponibile.
+
 
 let BookDB;
 let userDB;
+
+function gestisciErrore( err, req, res, next){
+    console.log("Qualcosa e' andato storto !!! "+req.url+"!!!!");
+    res.statusCode=400;
+    res.send("Qualcosa e' andato storto !!! "+req.url+"!!!!");
+
+}
+
+function isUserAuth (req, res, next){
+    console.log("isUserAuth... cookies=", req.cookies);
+    if ( req.url=="/login" && req.method=="POST") {
+        // se ci viene chiesta la login lo facciamo passare perche' vuol dire che l'utente 
+        // vuole authenticarsi e lo permettiamo
+        next();
+        return;
+    }
+    if (req.cookies && req.cookies.authenticato) {
+        console.log("URL:"+req.url + " user:"+req.cookies.authenticato);
+        // qui nella realtà dovremmo controllare che in effetti l'utente esista davvero e
+        // la stringa di cookie dovrebbe essere criptata per evitare manomissioni
+        // ma noi per ora ce ne freghiamo...
+        next();
+    } else {
+        res.statusCode=401;
+        res.json({"msg":"Login Failed"});
+    }
+}
+
 
 function logger (req, res, next){
    console.log("Chiamato "+req.url+"!!!!");
@@ -78,15 +119,6 @@ async function main (){
     };
 
     function listaLibri (req,res) {
-        if (req.cookies) {
-            if (req.cookies.authenticato) {
-
-            } else {
-                res.send(401,"Non autorizzato");
-            }
-           console.log ("Cookies ricevuti "+ JSON.stringify(req.cookies));
-        }
-        
         res.send(BookDB);
     };
 
@@ -174,13 +206,22 @@ async function main (){
             res.statusCode=200;
             //View
             res.cookie("authenticato", user);
-            res.send("Benvenuto "+trovato.nome);
+            res.send({"user":user});
         } else {
             res.statusCode=401;
             //View
             
-            res.send("Utente non valido");
+            res.send({"msg":"user not found"});
         }
+    });
+
+    app.get('/logout', function(req,res) {
+ 
+            res.statusCode=200;
+            //View
+            res.clearCookie("authenticato");
+            res.send({"msg":"Logout done"});
+
     });
 
 
@@ -188,6 +229,8 @@ async function main (){
     app.get('/aaa', function (req, res) {
         res.send('Hello from AAA')
     });
+
+    app.use (gestisciErrore);
     console.log ("Prima dello start del server");
     app.listen (port,() => {console.log ("Backend partito!")});
     console.log ("dopo lo start del server");
