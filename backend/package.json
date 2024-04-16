@@ -4,7 +4,11 @@
   "description": "Corso ITS",
   "main": "hello.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev" : "npm run development",
+    "development" : "nodemon index-esercizi-lunedi.js",
+    "production" : "node index-esercizi-lunedi.js",
+    "prod" : "npm run production"
   },
   "author": "",
   "license": "ISC",
