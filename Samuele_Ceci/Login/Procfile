@@ -1,0 +1,8 @@
+web: node database.js
+
+git init
+git add .
+git commit -m "Primo commit"
+heroku login
+heroku create Libreria
+git push heroku master

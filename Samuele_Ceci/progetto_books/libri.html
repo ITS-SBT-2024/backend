@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Libreria</title>
+  <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+
+<h1 class="title">LA TUA LIBRERIA</h1>
+
+<div class="input-container">
+  <button onclick="cercaLibro()">Cerca Libro per ID</button>
+  <input type="text" id="idCercato" placeholder="Inserisci ID libro">
+</div>
+
+<div class="input-container">
+  <button onclick="aggiungiLibro()">Aggiungi Libro</button>
+  <input type="text" id="nomeLibro" placeholder="Nome Libro">
+</div>
+
+<div class="input-container">
+  <button onclick="modificaLibro()">Modifica Libro</button>
+  <input type="text" id="idModifica" placeholder="ID Libro da modificare">
+  <input type="text" id="nuovoNome" placeholder="Nuovo nome">
+</div>
+
+<div class="input-container">
+  <button onclick="eliminaLibro()">Elimina Libro</button>
+  <input type="text" id="idElimina" placeholder="ID Libro da eliminare">
+</div>
+
+<button onclick="eliminaCollezione()">Elimina Collezione di Libri</button>
+
+<ul id="elencoLibri">
+</ul>
+
+<script src="script.js"></script>
+
+</body>
+</html>
