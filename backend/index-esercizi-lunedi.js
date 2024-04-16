@@ -1,10 +1,12 @@
 const express = require("express");
 const fs = require("fs").promises;
 var cookieParser = require('cookie-parser');
+const morgan = require ('morgan');
 
 const app = express();
 const port= 3000;
 
+app.use(morgan("dev"));
 const nocache = require('nocache');
 app.use (logger);
 
@@ -24,12 +26,12 @@ app.use(express.json());
 
 
 // metto isUserAuth dopo cookieParser perche' accedo ai cookie che cookie parser ha reso disponibile.
-app.use(isUserAuth);
+
 
 let BookDB;
 let userDB;
 
-function gestisciErrore (req, res, next){
+function gestisciErrore( err, req, res, next){
     console.log("Qualcosa e' andato storto !!! "+req.url+"!!!!");
     res.statusCode=400;
     res.send("Qualcosa e' andato storto !!! "+req.url+"!!!!");
