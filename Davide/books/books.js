@@ -200,9 +200,26 @@ async function main() {
     } else {
       console.log('user not found');
       res.statusCode = 401;
-      res.json({msg: 'user not found'})
+      res.json({"msg": 'user not found'});
     }
   }
+
+  app.get('/logout', logout);
+
+  function logout(res, req) {
+    res.statusCode = 200;
+    res.clearCookie('auth');
+    res.json({"msg": 'Logging out'})
+  }
+
+  app.use(handleError);
+
+  function handleError(req, res) {
+    res.statusCode = 400;
+    console.log('Something went wrong - url: ' + req.url);
+    res.json({msg: "Something went wrong - url: " + req.url});
+  }
+
   app.listen(port, () => console.log(`Live on http://localhost:${port}`));
 }
 
