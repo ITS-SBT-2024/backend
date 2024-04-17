@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan')
 const nocache = require('nocache');
-const cookieParser = require('cookie-parser');
+var cookieParser = require('cookie-parser');
 const { readFile, writeFile } = require('node:fs/promises')
 
 const app = express();
@@ -18,13 +18,17 @@ app.use(cookieParser());
 app.use(/^\/books(.*)/, isUserLoggedIn);
 
 function isUserLoggedIn(req, res, next) {
-  if (req.cookies && req.cookies.auth) {
-    console.log('logged in');
-    console.log(`url: ${req.url} - cookie: ${req.cookies.auth}`);
-    next();
-  } else {
-    console.log('not logged in');
-    res.status(401).send('Unauthorized');
+  try {
+    if (req.cookies && req.cookies.auth) {
+      console.log('logged in');
+      console.log(`url: ${req.url} - cookie: ${req.cookies.auth}`);
+      next();
+    } else {
+      console.log('not logged in');
+      throw 'not logged in'
+    }
+  } catch (err) {
+    next(err)
   }
 }
 
@@ -105,12 +109,16 @@ async function main() {
 
     const bookFound = booksDB.find(book => id === book.id);
 
-    if (bookFound) {
-      res.statusCode = 200;
-      res.send(`${bookFound.title} by ${bookFound.author} at ID ${id}`);
-    } else {
-      res.statusCode = 401;
-      res.send('Book not found');
+    try {
+      if (bookFound) {
+        res.statusCode = 200;
+        res.send(`${bookFound.title} by ${bookFound.author} at ID ${id}`);
+      } else {
+        res.statusCode = 401;
+        throw "book not found";
+      }
+    } catch (err) {
+      next(err);
     }
   }
 
@@ -134,12 +142,16 @@ async function main() {
     const { id } = req.params;
     const bookFound = booksDB.find(book => id === book.id);
 
-    if (bookFound) {
-      booksDB = booksDB.filter(book => book.id !== id);
-      saveBooksDB();
-      res.send('Book has been deleted');
-    } else {
-      res.send('Book not found');
+    try {
+      if (bookFound) {
+        booksDB = booksDB.filter(book => book.id !== id);
+        saveBooksDB();
+        res.send('Book has been deleted');
+      } else {
+        throw 'book not found'
+      }
+    } catch (err) {
+      next(err);
     }
   }
 
@@ -169,13 +181,17 @@ async function main() {
 
     const bookFound = booksDB.find(book => id === book.id);
 
-    if (bookFound) {
-      bookFound.title = title;
-      bookFound.author = author;
-      saveBooksDB();
-      res.status(200).send('Book has been updated');
-    } else {
-      res.status(401).send('Book not found');
+    try {
+      if (bookFound) {
+        bookFound.title = title;
+        bookFound.author = author;
+        saveBooksDB();
+        res.status(200).send('Book has been updated');
+      } else {
+        throw 'book not found'
+      }
+    } catch (err) {
+      next(err);
     }
   }
 
@@ -197,28 +213,36 @@ async function main() {
       console.log('user found');
       res.statusCode = 200;
       res.cookie('auth', username);
-      res.json({user: username})
+      res.json({ user: username })
     } else {
       console.log('user not found');
       res.statusCode = 401;
-      res.json({"msg": 'user not found'});
+      res.json({ "msg": 'user not found' });
     }
   }
 
   app.get('/logout', logout);
 
-  function logout(res, req) {
+  function logout(req, res) {
     res.statusCode = 200;
     res.clearCookie('auth');
-    res.json({"msg": 'Logging out'})
+    res.json({ "msg": 'Logging out' })
   }
 
   app.use(handleError);
 
-  function handleError(req, res) {
+  function handleError(err, req, res, next) {
     res.statusCode = 400;
-    console.log('Something went wrong - url: ' + req.url);
-    res.json({msg: "Something went wrong - url: " + req.url});
+    console.log(`HandleError | error: ${err} - url: ${req.url}`);
+    res.json({ msg: `HandleError | error: ${err} - url: ${req.url}` });
+  }
+
+  app.use(handleUnmatchedRoute);
+
+  function handleUnmatchedRoute(req, res) {
+    res.statusCode = 400;
+    console.log(`route doesn't exist - url: ${req.url}`);
+    res.json({msg: `route doesn't exist - url: ${req.url}`});
   }
 
   app.listen(port, () => console.log(`Live on http://localhost:${port}`));
