@@ -14,7 +14,7 @@ document.getElementById('registerForm').addEventListener('submit', function(even
 
     // Effettua una richiesta HTTP per leggere il database corrente
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'Samuele_Ceci/Login/credenziali.json', true); // Assicurati che l'URL sia corretto
+    xhr.open('GET', 'credenziali.json', true); // Correggere l'URL se necessario
     xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
@@ -30,13 +30,13 @@ document.getElementById('registerForm').addEventListener('submit', function(even
 
                 // Effettua una richiesta HTTP per aggiornare il database con le nuove credenziali
                 var xhrUpdate = new XMLHttpRequest();
-                xhrUpdate.open('PUT', 'Samuele_Ceci/Login/credenziali.json', true); // Assicurati che l'URL sia corretto
+                xhrUpdate.open('PUT', 'credenziali.json', true); // Correggere l'URL se necessario
                 xhrUpdate.setRequestHeader('Content-Type', 'application/json');
                 xhrUpdate.onreadystatechange = function() {
                     if (xhrUpdate.readyState === XMLHttpRequest.DONE) {
                         if (xhrUpdate.status === 200) {
                             alert('Registrazione completata. Ora puoi effettuare il login.');
-                            // Reindirizza l'utente alla pagina di login
+                            // Verifica che l'URL di reindirizzamento sia valido prima del reindirizzamento
                             window.location.href = "login.html";
                         } else {
                             alert('Si è verificato un errore durante la registrazione. Riprova più tardi.');

@@ -1,4 +1,4 @@
-document.getElementById('loginForm').addEventListener('submit', function (event) {
+document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Previeni il comportamento predefinito del form
 
     // Recupera i valori di username e password
@@ -8,17 +8,17 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
     // Effettua una richiesta HTTP per leggere il file JSON
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'credenziali.json', true);
-    xhr.onreadystatechange = function () {
+    xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 var utenti = JSON.parse(xhr.responseText);
                 // Verifica le credenziali
-                var utente = utenti.find(function (u) {
+                var utente = utenti.find(function(u) {
                     return u.username === username && u.password === password;
                 });
                 if (utente) {
-                    // Reindirizza l'utente alla propria area personale
-                    window.location.href = utente.area_personale;
+                    // Reindirizza l'utente all'area personale
+                    window.location.href = "area_personale.html";
                 } else {
                     alert('Credenziali non valide. Riprova.');
                 }
@@ -29,4 +29,3 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
     };
     xhr.send();
 });
-
