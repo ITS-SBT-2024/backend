@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <script>
+    async function getCredentials() {
+      const username = document
+        .getElementById('user').value;
+      const password = document
+        .getElementById('password').value;
+
+      await login({ username, password });
+    }
+
+    async function login(data = {}) {
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        alert('Login was succesful');
+      } else {
+        alert('Login failed');
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Login</h1>
+  <div>
+    <p>Enter credentials:</p>
+    <input type="text" name="username" id="user" placeholder="Username">
+    <input type="password" name="password" id="password" placeholder="Password">
+    <button type="button" onclick="getCredentials()">Sign in</button>
+  </div>
+</body>
+</html>
