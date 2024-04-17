@@ -23,7 +23,7 @@ function isUserLoggedIn(req, res, next) {
     next();
   } else {
     console.log('not logged in');
-    res.status(401).send('Unauthorized')
+    res.status(401).send('Unauthorized');
   }
 }
 
@@ -195,7 +195,7 @@ async function main() {
     if (userFound) {
       console.log('user found');
       res.statusCode = 200;
-      res.cookies('auth', username);
+      res.cookie('auth', username);
       res.json({user: username})
     } else {
       console.log('user not found');
@@ -203,9 +203,7 @@ async function main() {
       res.json({msg: 'user not found'})
     }
   }
+  app.listen(port, () => console.log(`Live on http://localhost:${port}`));
 }
-
-app.listen(port, () => console.log(`Live on http://localhost:${port}/books`));
-
 
 main();
