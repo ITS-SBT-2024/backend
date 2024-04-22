@@ -1,0 +1,13 @@
+{
+    "libri": [
+      {
+        "id": "1",
+        "nome": "Il Signore degli Anelli"
+      },
+      {
+        "id": "2",
+        "nome": "Harry Potter"
+      }
+    ]
+  }
+  

@@ -1,0 +1,19 @@
+body {
+    border-top: 50px;
+    border-color: blue;
+}
+
+#primoDiv {
+    color: blue;
+    background-color: antiquewhite;
+    background: chartreuse;
+
+}
+
+#secondoDiv {
+    color: blue;
+    border: 10px;
+    font-weight: bolder;
+    font-style: italic;
+    font-stretch: extra-expanded;
+}

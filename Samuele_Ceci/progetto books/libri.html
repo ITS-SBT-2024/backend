@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elenco Libri</title>
+</head>
+<body>
+
+<h1>Elenco Libri</h1>
+<ul id="elencoLibri">
+</ul>
+
+<button onclick="cercaLibro()">Cerca Libro per ID</button>
+<input type="text" id="idCercato" placeholder="Inserisci ID libro">
+
+<button onclick="aggiungiLibro()">Aggiungi Libro</button>
+<input type="text" id="nomeLibro" placeholder="Nome Libro">
+
+<button onclick="modificaLibro()">Modifica Libro</button>
+<input type="text" id="idModifica" placeholder="ID Libro da modificare">
+<input type="text" id="nuovoNome" placeholder="Nuovo nome">
+
+<button onclick="eliminaLibro()">Elimina Libro</button>
+<input type="text" id="idElimina" placeholder="ID Libro da eliminare">
+
+<button onclick="eliminaCollezione()">Elimina Collezione di Libri</button>
+
+<script>
+  function cercaLibro() {
+    const idCercato = document.getElementById('idCercato').value;
+
+    fetch(`/libri/${idCercato}`)
+      .then(response => response.json())
+      .then(libro => {
+        const elencoLibri = document.getElementById('elencoLibri');
+        elencoLibri.innerHTML = ''; // Svuota la lista prima di aggiungere i nuovi libri
+
+        const listItem = document.createElement('li');
+        listItem.textContent = `ID: ${libro.id}, Nome: ${libro.nome}`;
+        elencoLibri.appendChild(listItem);
+      })
+      .catch(error => {
+        console.error('Si è verificato un errore durante la ricerca del libro:', error);
+      });
+  }
+
+  function aggiungiLibro() {
+    const nomeLibro = document.getElementById('nomeLibro').value;
+
+    fetch('/libri', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ nome: nomeLibro })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Errore durante l\'aggiunta del libro');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Libro aggiunto con successo:', data);
+      // Puoi aggiornare l'interfaccia utente o fare altre azioni necessarie qui
+    })
+    .catch(error => {
+      console.error('Si è verificato un errore durante l\'aggiunta del libro:', error);
+    });
+  }
+
+  // Funzione per caricare e visualizzare i libri dal server
+  function caricaLibri() {
+    fetch('/libri')
+      .then(response => response.json())
+      .then(libri => {
+        const elencoLibri = document.getElementById('elencoLibri');
+        elencoLibri.innerHTML = ''; // Svuota la lista prima di aggiungere i nuovi libri
+
+        libri.forEach(libro => {
+          const listItem = document.createElement('li');
+          listItem.textContent = `ID: ${libro.id}, Nome: ${libro.nome}`;
+          elencoLibri.appendChild(listItem);
+        });
+      })
+     
+  }
+
+  // Richiama la funzione per caricare e visualizzare i libri quando la pagina si carica
+  document.addEventListener('DOMContentLoaded', caricaLibri);
+</script>
+
+</body>
+</html>
